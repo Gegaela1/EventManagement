@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="EventManagement.API/EventManagement.API.csproj" />
+  <Project Path="EventManagement.DataAccess/EventManagement.DataAccess.csproj" />
+  <Project Path="EventManagement.Domain/EventManagement.Domain.csproj" />
+</Solution>
