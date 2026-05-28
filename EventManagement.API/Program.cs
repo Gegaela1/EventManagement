@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // =====================================
 // CONTROLLERS (API)
-// =====================================
 builder.Services.AddControllers();
 
 // =====================================
