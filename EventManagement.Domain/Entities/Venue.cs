@@ -1,6 +1,6 @@
 ﻿namespace EventManagement.Domain.Entities;
 
-// Representa el lugar donde se realiza el evento
+// Representa un lugar donde se realiza el evento
 public class Venue : AuditBase
 {
     public string Name { get; set; } = string.Empty;

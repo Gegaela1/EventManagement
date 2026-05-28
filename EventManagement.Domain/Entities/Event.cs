@@ -8,4 +8,14 @@ public class Event : AuditBase
     public DateTime Date { get; set; }
 
     public string Location { get; set; } = string.Empty;
+
+    // RELACIONES
+    
+    //Relación con evento (1:N)
+    public int VenueId { get; set; } //llave foránea
+    public Venue? Venue { get; set; }
+
+    //Relación con organizador (1:N)
+    public int OrganizerId { get; set; }
+    public Organizer? Organizer { get; set; }
 }
