@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // CONTROLLERS (API)
 builder.Services.AddControllers();
 
@@ -37,6 +38,14 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
+// DATA SEEDER
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<EventDbContext>();
+
+    DataSeeder.Seed(context);
+}
+
 
 // SWAGGER / MIDDLEWARE
 if (app.Environment.IsDevelopment())
@@ -44,7 +53,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 // CONFIGURACIÓN HTTP
 app.UseHttpsRedirection();
@@ -57,3 +65,4 @@ app.MapControllers();
 
 // Ejecutar app
 app.Run();
+
