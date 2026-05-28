@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using EventManagement.API.DTOs.Request;
+using EventManagement.API.DTOs.Response;
 using EventManagement.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class MappingProfile : Profile
 {

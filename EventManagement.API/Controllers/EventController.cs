@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using EventManagement.Domain.Entities;
+using EventManagement.API.DTOs.Request;
+using EventManagement.API.DTOs.Response;
 
-namespace EventManagement.API.Controllers;
-
-// Controlador API
+// CONTROLLER EVENT
 [ApiController]
 [Route("api/[controller]")]
 public class EventController : ControllerBase
@@ -18,19 +18,31 @@ public class EventController : ControllerBase
         _mapper = mapper;
     }
 
+    // GET
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var data = await _service.GetAllAsync();
-        return Ok(_mapper.Map<IEnumerable<EventResponseDTO>>(data));
+
+        // ENTITY → DTO
+        var result = _mapper.Map<IEnumerable<EventResponseDTO>>(data);
+
+        return Ok(result);
     }
 
+    // POST
     [HttpPost]
     public async Task<IActionResult> Create(EventRequestDTO dto)
     {
+        // DTO → ENTITY
         var entity = _mapper.Map<Event>(dto);
+
         var result = await _service.CreateAsync(entity);
 
-        return Ok(_mapper.Map<EventResponseDTO>(result));
+        // ENTITY → DTO
+        var response = _mapper.Map<EventResponseDTO>(result);
+
+        return Ok(response);
     }
 }
