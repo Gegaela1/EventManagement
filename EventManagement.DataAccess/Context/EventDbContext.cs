@@ -1,4 +1,4 @@
-﻿using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.DataAccess.Context;
@@ -31,16 +31,7 @@ public class EventDbContext : DbContext
 
             entity.Property(e => e.Location)
                 .HasMaxLength(200);
-        });
-        modelBuilder.Entity<Event>(entity =>
-        {
-            entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(150);
-
-        
             // RELACIÓN: EVENT → VENUE
             entity.HasOne(e => e.Venue)             // Un evento tiene un luegar
                 .WithMany(v => v.Events)           // Venue tiene muchos Events
@@ -55,6 +46,9 @@ public class EventDbContext : DbContext
         modelBuilder.Entity<Ticket>(entity =>
         {
             entity.HasKey(t => t.Id);
+
+            entity.Property(t => t.Price)
+                .HasColumnType("decimal(18,2)");
 
             // RELACIÓN: Ticket → Event
             entity.HasOne(t => t.Event)

@@ -14,6 +14,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader());
+});
+
+
 // DATABASE (DbContext)
 // Configura la conexión a SQL Server
 builder.Services.AddDbContext<EventDbContext>(options =>
@@ -27,9 +37,13 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 
 // Repository específico de Event
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
 // SERVICES (lógica de negocio)
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<AttendeeService>();
+builder.Services.AddScoped<TicketService>();
 
 // AUTOMAPPER (Mapeo DTO <-> Entity)
 builder.Services.AddAutoMapper(typeof(Program));
@@ -38,11 +52,13 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 // DATA SEEDER
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<EventDbContext>();
-
+    context.Database.EnsureCreated();
     DataSeeder.Seed(context);
 }
 
@@ -53,6 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 // CONFIGURACIÓN HTTP
 app.UseHttpsRedirection();

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using EventManagement.DataAccess.Context;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using EventManagement.Domain.Entities;
+using EventManagement.API.DTOs.Request;
+using EventManagement.API.DTOs.Response;
 
 // CONTROLLER: ATTENDEE
 
@@ -8,11 +10,13 @@ using EventManagement.Domain.Entities;
 [Route("api/[controller]")]
 public class AttendeeController : ControllerBase
 {
-    private readonly EventDbContext _context;
+    private readonly AttendeeService _service;
+    private readonly IMapper _mapper;
 
-    public AttendeeController(EventDbContext context)
+    public AttendeeController(AttendeeService service, IMapper mapper)
     {
-        _context = context;
+        _service = service;
+        _mapper = mapper;
     }
 
     // GET: api/Attendee
@@ -20,19 +24,20 @@ public class AttendeeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var data = _context.Attendees.ToList();
-        return Ok(data);
+        var data = await _service.GetAllAsync();
+        var result = _mapper.Map<IEnumerable<AttendeeResponseDTO>>(data);
+        return Ok(result);
     }
 
     // POST: api/Attendee
 
     [HttpPost]
-    public async Task<IActionResult> Create(Attendee attendee)
+    public async Task<IActionResult> Create(AttendeeRequestDTO dto)
     {
-        _context.Attendees.Add(attendee);
-        await _context.SaveChangesAsync();
+        var entity = _mapper.Map<Attendee>(dto);
+        var result = await _service.CreateAsync(entity);
+        var response = _mapper.Map<AttendeeResponseDTO>(result);
 
-        return Ok(attendee);
+        return Ok(response);
     }
 }
-
